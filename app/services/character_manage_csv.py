@@ -22,12 +22,19 @@ class Personagem:
     def take_damage(self, damage):
         self.character_healthy -= damage
 
+def verifica_personagem(character_name):
+    with open(env('CHARACTER_STATUS'), 'r') as csv_file:
+        reader = csv.DictReader(csv_file)
+        for line in reader:
+            if line['character_name'] == character_name:
+                return 'True'
+        
 
 def cria_personagem(character_name, character_class, character_healthy, character_status, character_power, character_strength, character_intelligence):
-    with open(env('CHARACTER_STATUS'), 'w') as csv_file:
-        writer = csv.writer(csv_file)
+    with open(env('CHARACTER_STATUS'), 'a') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',', lineterminator='\n')
         csv_line = [character_name, character_class, character_healthy, character_status, character_power, character_strength, character_intelligence]
-        writer.writerow(csv_line)
+        return "Erro!! Personagem existente." if verifica_personagem(character_name) == 'True' else writer.writerow(csv_line)
 
 
 
